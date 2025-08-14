@@ -1,0 +1,489 @@
+{
+  "name": "GetEmailData",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "simple": false,
+        "filters": {
+          "includeSpamTrash": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        0
+      ],
+      "id": "9c81fbcf-f974-4f23-85c9-1c2aa5b6f249",
+      "name": "Gmail Trigger",
+      "alwaysOutputData": true,
+      "retryOnFail": true,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "WdOe5sy4PGkOKAGo",
+          "name": "Gmail account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "operation": "addLabels",
+        "messageId": "={{ $json.id }}",
+        "labelIds": [
+          "Label_6723780716465293033"
+        ]
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1056,
+        16
+      ],
+      "id": "112904f6-ab66-4328-97b9-f76f35d0448e",
+      "name": "Add label to message",
+      "webhookId": "cab65653-2605-453a-bdce-d2d5b90b89c2",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "WdOe5sy4PGkOKAGo",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json['from.value[0].address'] }}",
+                    "rightValue": "noreply@aplikacje.pracuj.pl",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "1b915e03-6e57-47ff-8347-22aea9958eb5"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "850b3485-deeb-4b99-b733-56f61e83003b",
+                    "leftValue": "={{ $json['from.value[0].address'] }}",
+                    "rightValue": "mail@stage.erecruiter.pl",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "984e6594-4585-4b13-8b9a-f811043a162e",
+                    "leftValue": "={{ $json['from.value[0].name'] }}",
+                    "rightValue": "jobalerts-noreply@linkedin.com",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "60d0d22d-3ab3-4353-b92c-bb63534a7799",
+                    "leftValue": "={{ $json['from.value[0].address'] }}",
+                    "rightValue": "no-reply@justjoin.it",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "5506a81b-9980-41ec-8533-09e7eb1a875f",
+                    "leftValue": "={{ $json['from.value[0].address'] }}",
+                    "rightValue": "kontakt@mbank.pl",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        688,
+        -32
+      ],
+      "id": "1c2fe02c-51c7-4622-a3e2-722973b18dc9",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "resource": "spreadsheet",
+        "title": "Rekrutacja",
+        "sheetsUi": {
+          "sheetValues": [
+            {
+              "title": "Oferty"
+            },
+            {
+              "title": "Odpowiedzi"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        496,
+        304
+      ],
+      "id": "e1c8a474-d271-4ab7-bdf8-062d816739f3",
+      "name": "Create spreadsheet",
+      "executeOnce": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ZFkkXjSG1oFFaRZ8",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "id, from.value[0].address, from.value[0].name, subject",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        304,
+        0
+      ],
+      "id": "a8f313b9-8c31-4fcd-a62d-42e6b35ef2fd",
+      "name": "Split Out"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1UN-QfE8ePSVqUy-p7PnLO2oC7EZlLFzDTyaYNUMEKhQ",
+          "mode": "list",
+          "cachedResultName": "Rekrutacja",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1UN-QfE8ePSVqUy-p7PnLO2oC7EZlLFzDTyaYNUMEKhQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1151748543,
+          "mode": "list",
+          "cachedResultName": "Odpowiedzi",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1UN-QfE8ePSVqUy-p7PnLO2oC7EZlLFzDTyaYNUMEKhQ/edit#gid=1151748543"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "from.value[0].address",
+              "displayName": "from.value[0].address",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "from.value[0].name",
+              "displayName": "from.value[0].name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "subject",
+              "displayName": "subject",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1616,
+        16
+      ],
+      "id": "754aed5c-18ca-4c4e-8690-f85ac3369696",
+      "name": "Append or update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ZFkkXjSG1oFFaRZ8",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "43604f96-123a-4902-90b5-c6d63c677251",
+              "name": "id",
+              "value": "={{ $('Split Out').item.json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "73cd33cb-c047-4b5a-b008-e6a4306acdfb",
+              "name": "address",
+              "value": "={{ $('Split Out').item.json['from.value[0].address'] }}",
+              "type": "string"
+            },
+            {
+              "id": "686ad796-73a5-4ee4-81fb-116e208d9ac4",
+              "name": "name",
+              "value": "={{ $('Split Out').item.json['from.value[0].name'] }}",
+              "type": "string"
+            },
+            {
+              "id": "f10e8fbc-e60a-4249-860a-c49f3af2dd68",
+              "name": "subject",
+              "value": "={{ $('Split Out').item.json.subject }}",
+              "type": "string"
+            },
+            {
+              "id": "e56031b8-afde-45e3-832e-3a88c6c3b256",
+              "name": "snippet",
+              "value": "={{ $json.snippet }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1296,
+        16
+      ],
+      "id": "33c2284e-2bdf-46ea-9d24-51834e65353a",
+      "name": "Edit Fields"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Gmail Trigger": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add label to message": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Add label to message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Add label to message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Add label to message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Add label to message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Add label to message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [],
+        [],
+        [],
+        [],
+        []
+      ]
+    },
+    "Create spreadsheet": {
+      "main": [
+        []
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Create spreadsheet",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append or update row in sheet": {
+      "main": [
+        []
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Append or update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "45ffcb67-bbb0-4406-85c0-6a083d4a613a",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "a4cd9df11923773b96226757834d275b96d23f0258008705fd00fec15e9eacc0"
+  },
+  "id": "ZwhIm3vtsfYQwI7J",
+  "tags": []
+}
